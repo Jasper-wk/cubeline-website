@@ -41,61 +41,63 @@
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
+            background-color: #ffffff;
+            color: #111;
         }
 
-        /* 頁面切換過場設定 */
-        #main-container {
+        /* 頁面切換過場核心 */
+        #main-content {
             transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             opacity: 1;
         }
         
-        .page-exiting {
+        /* 淡出狀態 */
+        .page-fade-out {
             opacity: 0 !important;
         }
 
-        .hidden-page {
+        /* 強制隱藏區塊 */
+        .hidden-section {
             display: none !important;
         }
 
-        .nav-link span {
+        /* 導航底線動畫 */
+        .nav-btn span {
             transform: scaleX(0);
             transform-origin: center;
             transition: transform 0.3s ease-out;
         }
-        .nav-link:hover span {
+        .nav-btn:hover span {
             transform: scaleX(1);
         }
     </style>
 </head>
-<body class="bg-white text-[#111]">
+<body>
 
-    <header class="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md z-50 shadow-sm transition-all duration-300">
+    <header class="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md z-50 shadow-sm">
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
-                <div class="flex-shrink-0 flex items-center cursor-pointer gap-3" onclick="handleNavigate('home')">
-                    <div id="logo-container" class="transition-transform duration-700 ease-in-out">
-                        <img src="images/logo.jpg" alt="立線體 Logo" class="h-10 w-auto object-contain" onerror="this.style.display='none'">
+                <div class="flex items-center cursor-pointer gap-3" onclick="switchPage('home')">
+                    <div id="nav-logo" class="transition-transform duration-700 ease-in-out">
+                        <img src="images/logo.jpg" alt="Cubeline Logo" class="h-10 w-auto object-contain" onerror="this.style.display='none'">
                     </div>
                     <span class="text-2xl font-light text-gray-900 hidden sm:block tracking-wide">立線體</span>
                 </div>
 
-                <div class="hidden md:flex md:items-center md:space-x-8">
-                    <button onclick="handleNavigate('home')" class="nav-link text-gray-600 hover:text-black transition-colors duration-300 text-sm font-normal tracking-widest uppercase relative group">
-                        首頁
-                        <span class="absolute -bottom-1 left-0 w-full h-px bg-black"></span>
+                <div class="hidden md:flex space-x-8">
+                    <button onclick="switchPage('home')" class="nav-btn text-gray-600 hover:text-black text-sm font-normal tracking-widest uppercase relative py-2">
+                        首頁 <span class="absolute bottom-0 left-0 w-full h-px bg-black"></span>
                     </button>
-                    <button onclick="handleNavigate('products')" class="nav-link text-gray-600 hover:text-black transition-colors duration-300 text-sm font-normal tracking-widest uppercase relative group">
-                        產品介紹
-                        <span class="absolute -bottom-1 left-0 w-full h-px bg-black"></span>
+                    <button onclick="switchPage('products')" class="nav-btn text-gray-600 hover:text-black text-sm font-normal tracking-widest uppercase relative py-2">
+                        產品介紹 <span class="absolute bottom-0 left-0 w-full h-px bg-black"></span>
                     </button>
-                    <button onclick="handleNavigate('about')" class="nav-link text-gray-600 hover:text-black transition-colors duration-300 text-sm font-normal tracking-widest uppercase relative group">
-                        關於我們
-                        <span class="absolute -bottom-1 left-0 w-full h-px bg-black"></span>
+                    <button onclick="switchPage('about')" class="nav-btn text-gray-600 hover:text-black text-sm font-normal tracking-widest uppercase relative py-2">
+                        關於我們 <span class="absolute bottom-0 left-0 w-full h-px bg-black"></span>
                     </button>
                 </div>
 
-                <div class="md:hidden flex items-center">
-                    <button onclick="toggleMobileMenu()" class="p-2 text-gray-600 hover:text-black">
+                <div class="md:hidden">
+                    <button onclick="toggleMenu()" class="p-2 text-gray-600">
                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16m-4 6h16" />
                         </svg>
@@ -104,139 +106,212 @@
             </div>
         </nav>
 
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-gray-100 transition-all duration-300">
-            <div class="px-4 pt-2 pb-4 space-y-1">
-                <button onclick="handleNavigate('home'); toggleMobileMenu()" class="block w-full text-left px-3 py-3 text-base font-medium text-gray-600 hover:text-black hover:bg-gray-50 rounded-md">首頁</button>
-                <button onclick="handleNavigate('products'); toggleMobileMenu()" class="block w-full text-left px-3 py-3 text-base font-medium text-gray-600 hover:text-black hover:bg-gray-50 rounded-md">產品介紹</button>
-                <button onclick="handleNavigate('about'); toggleMobileMenu()" class="block w-full text-left px-3 py-3 text-base font-medium text-gray-600 hover:text-black hover:bg-gray-50 rounded-md">關於我們</button>
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-gray-100 absolute w-full">
+            <div class="px-4 py-2 space-y-1">
+                <button onclick="switchPage('home'); toggleMenu()" class="block w-full text-left px-3 py-3 text-gray-600 hover:bg-gray-50">首頁</button>
+                <button onclick="switchPage('products'); toggleMenu()" class="block w-full text-left px-3 py-3 text-gray-600 hover:bg-gray-50">產品介紹</button>
+                <button onclick="switchPage('about'); toggleMenu()" class="block w-full text-left px-3 py-3 text-gray-600 hover:bg-gray-50">關於我們</button>
             </div>
         </div>
     </header>
 
-    <main id="main-container" class="min-h-screen pt-20">
+    <main id="main-content" class="min-h-screen pt-20">
         
         <section id="page-home" class="block animate-fade-in">
             <div class="flex flex-col items-center justify-center min-h-[calc(100vh-5rem)] text-center px-4">
-                <div class="flex flex-col items-center justify-center flex-grow max-w-4xl mx-auto mt-10">
-                    <div class="animate-slow-spin mb-12">
-                        <img src="images/logo.jpg" alt="Logo" class="w-32 h-32 md:w-48 md:h-48 object-contain opacity-90" onerror="this.style.display='none'">
-                    </div>
-                    <h1 class="text-5xl md:text-7xl lg:text-8xl font-thin text-black tracking-tighter mb-8 leading-tight">
-                        3D 列印，<br class="sm:hidden" />精益求精。
-                    </h1>
-                    <p class="text-xl md:text-2xl lg:text-3xl font-light text-gray-500 max-w-2xl mx-auto mb-12 leading-relaxed">
-                        立線體將創意轉化為精確、優美的實體。<br />
-                        從概念到觸手可及。
-                    </p>
-                    <div class="flex flex-col sm:flex-row gap-4 sm:gap-6 w-full sm:w-auto">
-                        <button onclick="handleNavigate('products')" class="px-10 py-4 text-lg font-medium text-white bg-black rounded-full transition-all hover:bg-gray-800 hover:scale-105 active:scale-95">
-                            探索產品
-                        </button>
-                        <button onclick="handleNavigate('about')" class="px-10 py-4 text-lg font-medium text-black bg-gray-100 rounded-full transition-all hover:bg-gray-200 hover:scale-105 active:scale-95">
-                            關於我們
-                        </button>
-                    </div>
+                <div class="animate-slow-spin mb-12 mt-10">
+                    <img src="images/logo.jpg" alt="Logo" class="w-32 h-32 md:w-48 md:h-48 object-contain opacity-90" onerror="this.style.display='none'">
                 </div>
-                <div class="pb-8 animate-bounce opacity-30 mt-12">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-                    </svg>
+                <h1 class="text-5xl md:text-7xl font-thin text-black tracking-tighter mb-8">
+                    3D 列印，<br class="sm:hidden" />精益求精。
+                </h1>
+                <p class="text-xl md:text-2xl font-light text-gray-500 mb-12">
+                    立線體將創意轉化為精確、優美的實體。<br>從概念到觸手可及。
+                </p>
+                <div class="flex gap-4">
+                    <button onclick="switchPage('products')" class="px-10 py-4 bg-black text-white rounded-full hover:bg-gray-800 transition-transform hover:scale-105">探索產品</button>
+                    <button onclick="switchPage('about')" class="px-10 py-4 bg-gray-100 text-black rounded-full hover:bg-gray-200 transition-transform hover:scale-105">關於我們</button>
                 </div>
             </div>
         </section>
 
-        <section id="page-products" class="hidden-page">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <h1 class="text-4xl md:text-6xl font-thin text-center text-black tracking-tight mb-20 mt-10">精選案例</h1>
-                <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-16">
+        <section id="page-products" class="hidden-section">
+            <div class="max-w-7xl mx-auto px-4 py-12">
+                <h1 class="text-4xl md:text-6xl font-thin text-center mb-20 mt-10">精選案例</h1>
+                <div id="product-list" class="grid grid-cols-1 md:grid-cols-2 gap-16">
                     </div>
             </div>
         </section>
 
-        <section id="page-about" class="hidden-page">
-            <div class="min-h-[80vh] flex items-center justify-center px-4 sm:px-6 lg:px-8 pb-20">
+        <section id="page-about" class="hidden-section">
+            <div class="min-h-[80vh] flex items-center justify-center px-4 pb-20">
                 <div class="max-w-2xl mx-auto text-center pt-12">
                     <div class="mb-12 inline-block p-8 rounded-3xl bg-gray-50">
                         <img src="images/logo.jpg" alt="Logo" class="w-24 h-24 object-contain" onerror="this.style.display='none'">
                     </div>
-                    <h1 class="text-4xl md:text-5xl font-bold text-black tracking-tight mb-2">Cubeline｜立線體</h1>
-                    <h2 class="text-xl md:text-2xl font-light text-gray-500 mb-12 tracking-wide">台灣第一｜三圍量子力學研究所</h2>
-                    
-                    <div class="space-y-8">
-                        <p class="text-2xl md:text-3xl font-light text-gray-900 leading-normal">用一條線，<br />勾勒出立體世界。</p>
-                        <div class="w-16 h-px bg-gray-200 mx-auto my-8"></div>
-                        <div class="space-y-4">
-                            <p class="text-lg font-medium text-gray-900 tracking-widest uppercase">3D 列印・設計・實用</p>
-                            <p class="text-base text-gray-500 font-light">客製列印籌備中，敬請期待</p>
-                        </div>
-                        <div class="pt-12">
-                            <p class="text-sm text-gray-400 mb-2 uppercase tracking-widest">合作請洽</p>
-                            <a href="mailto:cubeline0000@gmail.com" class="text-2xl md:text-3xl font-light text-black hover:text-gray-600 transition-colors border-b border-black/20 hover:border-black pb-1">
-                                cubeline0000@gmail.com
-                            </a>
-                        </div>
-                    </div>
+                    <h1 class="text-4xl font-bold mb-2">Cubeline｜立線體</h1>
+                    <h2 class="text-xl text-gray-500 mb-12">台灣第一｜三圍量子力學研究所</h2>
+                    <p class="text-2xl font-light leading-normal mb-8">用一條線，<br>勾勒出立體世界。</p>
+                    <div class="w-16 h-px bg-gray-200 mx-auto my-8"></div>
+                    <p class="text-lg font-medium tracking-widest uppercase mb-12">3D 列印・設計・實用</p>
+                    <p class="text-sm text-gray-400 mb-2 uppercase">合作請洽</p>
+                    <a href="mailto:cubeline0000@gmail.com" class="text-2xl font-light border-b border-gray-300 hover:border-black pb-1">cubeline0000@gmail.com</a>
                 </div>
             </div>
         </section>
 
     </main>
 
-    <div id="product-modal" class="hidden fixed inset-0 bg-white/60 backdrop-blur-xl z-[60] items-center justify-center p-4 sm:p-8 transition-all duration-300 opacity-0" onclick="closeModal()">
-        <div onclick="event.stopPropagation()" class="bg-white w-full max-w-5xl h-[80vh] rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row border border-gray-100 transform translate-y-10 transition-all duration-500" id="modal-content">
-            <div class="w-full md:w-1/2 h-1/2 md:h-full bg-gray-50 relative">
+    <div id="modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4" onclick="closeModal()">
+        <div class="absolute inset-0 bg-white/60 backdrop-blur-xl"></div>
+        
+        <div onclick="event.stopPropagation()" class="relative bg-white w-full max-w-5xl h-[80vh] rounded-3xl shadow-2xl flex flex-col md:flex-row border border-gray-100 overflow-hidden animate-fade-in">
+            <div class="w-full md:w-1/2 h-1/2 md:h-full bg-gray-50">
                 <img id="modal-img" src="" class="w-full h-full object-cover">
-                <button onclick="closeModal()" class="absolute top-6 left-6 md:hidden bg-white/90 backdrop-blur p-2 rounded-full shadow-sm">X</button>
             </div>
-            <div class="w-full md:w-1/2 h-1/2 md:h-full p-8 md:p-16 overflow-y-auto flex flex-col justify-center relative">
-                <button onclick="closeModal()" class="hidden md:block absolute top-8 right-8 text-gray-400 hover:text-black transition-colors">
-                    <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12" /></svg>
+            <div class="w-full md:w-1/2 h-1/2 md:h-full p-8 md:p-16 overflow-y-auto flex flex-col justify-center">
+                <button onclick="closeModal()" class="absolute top-4 right-4 md:top-8 md:right-8 text-gray-400 hover:text-black">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
-                <h2 id="modal-title" class="text-3xl md:text-4xl font-medium text-black mb-4"></h2>
+                <h2 id="modal-title" class="text-3xl font-medium mb-4"></h2>
                 <p id="modal-desc" class="text-xl text-gray-500 mb-8 font-light"></p>
                 <div class="w-12 h-px bg-gray-200 mb-8"></div>
-                <p id="modal-details" class="text-lg text-gray-700 leading-loose font-light"></p>
-                <div class="mt-auto pt-12">
-                    <button class="w-full py-4 bg-black text-white rounded-xl font-medium hover:bg-gray-800 transition-colors">詢問此產品</button>
-                </div>
+                <p id="modal-detail" class="text-lg text-gray-700 leading-loose font-light"></p>
+                <button class="mt-12 w-full py-4 bg-black text-white rounded-xl font-medium hover:bg-gray-800">詢問此產品</button>
             </div>
         </div>
     </div>
 
-    <footer class="bg-white py-12 px-4 border-t border-gray-100">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-            <div class="flex items-center gap-2">
-                <img src="images/logo.jpg" alt="logo" class="w-6 h-6 opacity-50" onerror="this.style.display='none'">
-                <span class="text-gray-400 font-medium">Cubeline</span>
-            </div>
-            <p class="text-gray-400 text-sm font-light">© <span id="year"></span> 立線體 (Cubeline). All rights reserved.</p>
-        </div>
+    <footer class="bg-white py-12 px-4 border-t border-gray-100 text-center">
+        <p class="text-gray-400 text-sm font-light">© <span id="year"></span> 立線體 (Cubeline). All rights reserved.</p>
     </footer>
 
     <script>
-        // 產品資料 (圖片路徑已修正)
+        // 1. 定義產品資料 (注意圖片路徑)
         const products = [
             {
                 id: 1,
                 name: '精密原型 A',
-                description: '高精度公差工程原型',
-                imgSrc: 'images/product-a.jpg',
-                details: '使用先進 SLA 技術製作，適用於功能測試和外觀驗證。表面極度平滑，公差控制在 ±0.05mm 以內。'
+                desc: '高精度公差工程原型',
+                img: 'images/product-a.jpg',
+                detail: '使用先進 SLA 技術製作，適用於功能測試和外觀驗證。表面極度平滑，公差控制在 ±0.05mm 以內。'
             },
             {
                 id: 2,
                 name: '客製化治具 B',
-                description: '耐用輕量化生產工具',
-                imgSrc: 'images/product-b.jpg',
-                details: '採用 FDM 搭配工程級碳纖維複合材料製成，強度比肩鋁合金，重量卻減輕 60%。'
+                desc: '耐用輕量化生產工具',
+                img: 'images/product-b.jpg',
+                detail: '採用 FDM 搭配工程級碳纖維複合材料製成，強度比肩鋁合金，重量卻減輕 60%。'
             },
             {
                 id: 3,
                 name: '藝術模型 C',
-                description: '複雜幾何微縮模型',
-                imgSrc: 'images/product-c.jpg',
-                details: '專為設計師打造，突破傳統模具限制，完美呈現鏤空、交織等複雜幾何結構。'
+                desc: '複雜幾何微縮模型',
+                img: 'images/product-c.jpg',
+                detail: '專為設計師打造，突破傳統模具限制，完美呈現鏤空、交織等複雜幾何結構。'
             },
             {
                 id: 4,
-                name:
+                name: '小批量生產 D',
+                desc: '快速交付終端零件',
+                img: 'images/product-d.jpg',
+                detail: '無需開模費用，適合 10-100 件的小批量試產，縮短 80% 的產品上市時間。'
+            }
+        ];
+
+        // 2. 頁面載入時初始化
+        window.onload = function() {
+            document.getElementById('year').textContent = new Date().getFullYear();
+            renderProducts();
+        };
+
+        // 3. 頁面切換邏輯 (修復版)
+        let isSwitching = false;
+        let currentPage = 'home';
+
+        function switchPage(targetId) {
+            // 如果正在切換或點擊當前頁面，則不做事
+            if (isSwitching || currentPage === targetId) return;
+            
+            isSwitching = true;
+            const main = document.getElementById('main-content');
+            const logo = document.getElementById('nav-logo');
+
+            // 開始過場：Logo 旋轉 + 內容淡出
+            logo.classList.add('rotate-[360deg]');
+            main.classList.add('page-fade-out');
+
+            // 等待 400ms 動畫結束
+            setTimeout(() => {
+                // 隱藏所有區塊
+                document.getElementById('page-home').classList.add('hidden-section');
+                document.getElementById('page-products').classList.add('hidden-section');
+                document.getElementById('page-about').classList.add('hidden-section');
+
+                // 顯示目標區塊
+                const targetSection = document.getElementById('page-' + targetId);
+                if (targetSection) {
+                    targetSection.classList.remove('hidden-section');
+                }
+
+                // 滾動回頂部
+                window.scrollTo(0, 0);
+
+                // 內容淡入
+                main.classList.remove('page-fade-out');
+                
+                // 重置狀態
+                logo.classList.remove('rotate-[360deg]');
+                currentPage = targetId;
+                isSwitching = false;
+            }, 400);
+        }
+
+        // 4. 渲染產品列表
+        function renderProducts() {
+            const container = document.getElementById('product-list');
+            let html = '';
+            products.forEach(p => {
+                html += `
+                    <div class="group cursor-pointer flex flex-col gap-6" onclick="openModal(${p.id})">
+                        <div class="aspect-square w-full bg-gray-50 rounded-3xl overflow-hidden relative border border-gray-100">
+                            <img src="${p.img}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" onerror="this.src='https://placehold.co/600x600?text=No+Image'">
+                            <div class="absolute inset-0 hover:bg-black/5 transition-colors"></div>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-medium text-gray-900">${p.name}</h3>
+                            <p class="text-lg text-gray-500 font-light">${p.desc}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // 5. Modal 控制
+        function openModal(id) {
+            const product = products.find(p => p.id === id);
+            if (!product) return;
+
+            document.getElementById('modal-img').src = product.img;
+            document.getElementById('modal-title').textContent = product.name;
+            document.getElementById('modal-desc').textContent = product.desc;
+            document.getElementById('modal-detail').textContent = product.detail;
+
+            const modal = document.getElementById('modal');
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // 禁止背景滾動
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // 6. 手機選單控制
+        function toggleMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>
