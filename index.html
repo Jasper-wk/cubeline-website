@@ -82,6 +82,7 @@
             <div class="flex justify-between items-center h-20">
                 <div class="flex-shrink-0 flex items-center cursor-pointer gap-3" onclick="handleNavigate('home')">
                     <div id="logo-container" class="transition-transform duration-700 ease-in-out">
+                        <!-- 注意：請確認 images 資料夾內有名為 logo.png 的檔案 -->
                         <img src="./images/logo.png" alt="立線體 Logo" class="h-10 w-auto object-contain" onerror="this.style.display='none'">
                     </div>
                     <span class="text-2xl font-light text-gray-900 hidden sm:block tracking-wide">立線體</span>
@@ -133,7 +134,7 @@
                         3D 列印，<br class="sm:hidden" />精益求精。
                     </h1>
                     <p class="text-xl md:text-2xl lg:text-3xl font-light text-gray-500 max-w-2xl mx-auto mb-12 leading-relaxed">
-                        立線體將創意轉化為精確、優美的實體。<br />
+                        立線體將創意轉化為精確、優美的實體。<br /><br>
                         從概念到觸手可及。
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4 sm:gap-6 w-full sm:w-auto">
@@ -157,7 +158,8 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <h1 class="text-4xl md:text-6xl font-thin text-center text-black tracking-tight mb-20 mt-10">精選案例</h1>
                 <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-16">
-                    </div>
+                    <!-- 產品卡片由 JS 生成 -->
+                </div>
             </div>
         </section>
 
@@ -222,34 +224,38 @@
     </footer>
 
     <script>
-        // 1. 產品資料 (保持你的資料結構)
+        // 1. 產品資料 (已修改：指向本地 images 資料夾)
+        // Jasper 請注意：請確保您的 images 資料夾中有以下檔名的圖片：
+        // product-1.jpg, product-2.jpg, product-3.jpg, product-4.jpg
+        // 或是將下方的檔名修改為您實際的檔名
         const products = [
             {
                 id: 1,
                 name: '精密原型 A',
                 description: '高精度公差工程原型',
-                imgSrc: 'https://placehold.co/600x600/f5f5f7/111?text=Prototype+A', 
+                // 修改點：從 placehold.co 改為本地路徑
+                imgSrc: './images/product-1.jpg', 
                 details: '使用先進 SLA 技術製作，適用於功能測試和外觀驗證。表面極度平滑，公差控制在 ±0.05mm 以內。'
             },
             {
                 id: 2,
                 name: '客製化治具 B',
                 description: '耐用輕量化生產工具',
-                imgSrc: 'https://placehold.co/600x600/f5f5f7/111?text=Fixture+B',
+                imgSrc: './images/product-2.jpg',
                 details: '採用 FDM 搭配工程級碳纖維複合材料製成，強度比肩鋁合金，重量卻減輕 60%。'
             },
             {
                 id: 3,
                 name: '藝術模型 C',
                 description: '複雜幾何微縮模型',
-                imgSrc: 'https://placehold.co/600x600/f5f5f7/111?text=Art+Model+C',
+                imgSrc: './images/product-3.jpg',
                 details: '專為設計師打造，突破傳統模具限制，完美呈現鏤空、交織等複雜幾何結構。'
             },
             {
                 id: 4,
                 name: '小批量生產 D',
                 description: '快速交付終端零件',
-                imgSrc: 'https://placehold.co/600x600/f5f5f7/111?text=Batch+D',
+                imgSrc: './images/product-4.jpg',
                 details: '無需開模費用，適合 10-100 件的小批量試產，縮短 80% 的產品上市時間。'
             },
         ];
@@ -310,9 +316,10 @@
                 const card = document.createElement('div');
                 card.className = 'group cursor-pointer flex flex-col gap-6';
                 card.onclick = () => openModal(product);
+                // 修改點：增加了 onerror 的備用圖文字說明，方便除錯
                 card.innerHTML = `
                     <div class="aspect-square w-full bg-gray-50 rounded-3xl overflow-hidden relative border border-gray-100">
-                        <img src="${product.imgSrc}" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" onerror="this.src='https://placehold.co/600x600/f5f5f7/ccc?text=Image+Not+Found'">
+                        <img src="${product.imgSrc}" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" onerror="this.src='https://placehold.co/600x600/f5f5f7/ccc?text=Local+Image+Not+Found'">
                         <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-500"></div>
                     </div>
                     <div class="space-y-2">
@@ -329,7 +336,13 @@
         const modalContent = document.getElementById('modal-content');
 
         function openModal(product) {
-            document.getElementById('modal-img').src = product.imgSrc;
+            // 在 Modal 開啟時也設定正確的圖片，並處理錯誤
+            const modalImg = document.getElementById('modal-img');
+            modalImg.src = product.imgSrc;
+            modalImg.onerror = function() {
+                this.src = 'https://placehold.co/600x600/f5f5f7/ccc?text=Local+Image+Not+Found';
+            };
+
             document.getElementById('modal-title').textContent = product.name;
             document.getElementById('modal-desc').textContent = product.description;
             document.getElementById('modal-details').textContent = product.details;
@@ -361,6 +374,3 @@
     </script>
 </body>
 </html>
-
-
-
