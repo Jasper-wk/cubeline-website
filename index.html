@@ -1,17 +1,336 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-TW">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cubeline | 立線體</title>
     <meta name="description" content="立線體 - 台灣第一三圍量子力學研究所。3D 列印、設計、實用。">
-    <script type="module" crossorigin src="./assets/index-de8a25ae.js"></script>
-    <link rel="stylesheet" href="./assets/index-fd4dd130.css">
-  </head>
-  <body>
-    <div id="root"></div>
-    <!-- 這裡的 script 會將 React 程式碼注入到網頁中 -->
-    
-  </body>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600&display=swap');
+        
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: #ffffff;
+            color: #111;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden; /* 防止頁面左右晃動 */
+        }
+
+        /* 動畫定義 */
+        .page-section {
+            display: none; /* 預設隱藏所有頁面 */
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        
+        /* 顯示當前頁面 */
+        .page-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .animate-slow-spin {
+            animation: spin-slow 20s linear infinite;
+        }
+
+        /* 導航底線動畫 */
+        .nav-link span {
+            transform: scaleX(0);
+            transform-origin: center;
+            transition: transform 0.3s ease-out;
+        }
+        .nav-link:hover span {
+            transform: scaleX(1);
+        }
+    </style>
+    <script>
+        // Tailwind 設定
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body>
+
+    <header class="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md z-50 shadow-sm transition-all duration-300">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex-shrink-0 flex items-center cursor-pointer gap-3" onclick="navigateTo('home')">
+                    <div class="transition-transform duration-700 ease-in-out hover:rotate-[360deg]">
+                        <img src="./images/logo.png" alt="立線體 Logo" class="h-10 w-auto object-contain" onerror="this.style.display='none'">
+                    </div>
+                    <span class="text-2xl font-light text-gray-900 hidden sm:block tracking-wide">
+                        立線體
+                    </span>
+                </div>
+
+                <div class="hidden md:flex md:items-center md:space-x-8">
+                    <button onclick="navigateTo('home')" class="nav-link text-gray-600 hover:text-black transition-colors duration-300 text-sm font-normal tracking-widest uppercase relative group">
+                        首頁
+                        <span class="absolute -bottom-1 left-0 w-full h-px bg-black"></span>
+                    </button>
+                    <button onclick="navigateTo('products')" class="nav-link text-gray-600 hover:text-black transition-colors duration-300 text-sm font-normal tracking-widest uppercase relative group">
+                        產品介紹
+                        <span class="absolute -bottom-1 left-0 w-full h-px bg-black"></span>
+                    </button>
+                    <button onclick="navigateTo('about')" class="nav-link text-gray-600 hover:text-black transition-colors duration-300 text-sm font-normal tracking-widest uppercase relative group">
+                        關於我們
+                        <span class="absolute -bottom-1 left-0 w-full h-px bg-black"></span>
+                    </button>
+                </div>
+
+                <div class="md:hidden flex items-center">
+                    <button onclick="toggleMobileMenu()" class="p-2 text-gray-600 hover:text-black">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16m-4 6h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-gray-100">
+            <div class="px-4 pt-2 pb-4 space-y-1">
+                <button onclick="navigateTo('home'); toggleMobileMenu()" class="block w-full text-left px-3 py-3 text-base font-medium text-gray-600 hover:text-black hover:bg-gray-50 rounded-md">首頁</button>
+                <button onclick="navigateTo('products'); toggleMobileMenu()" class="block w-full text-left px-3 py-3 text-base font-medium text-gray-600 hover:text-black hover:bg-gray-50 rounded-md">產品介紹</button>
+                <button onclick="navigateTo('about'); toggleMobileMenu()" class="block w-full text-left px-3 py-3 text-base font-medium text-gray-600 hover:text-black hover:bg-gray-50 rounded-md">關於我們</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="min-h-screen pt-20">
+        
+        <section id="home" class="page-section active flex flex-col items-center justify-center min-h-[calc(100vh-5rem)] text-center px-4">
+            <div class="flex flex-col items-center justify-center flex-grow max-w-4xl mx-auto mt-10">
+                <div class="animate-slow-spin mb-12">
+                    <img src="./images/logo.png" alt="立線體 Logo" class="w-32 h-32 md:w-48 md:h-48 object-contain opacity-90" onerror="this.style.display='none'">
+                </div>
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-thin text-black tracking-tighter mb-8 leading-tight">
+                    3D 列印，<br class="sm:hidden" />精益求精。
+                </h1>
+                <p class="text-xl md:text-2xl lg:text-3xl font-light text-gray-500 max-w-2xl mx-auto mb-12 leading-relaxed">
+                    立線體將創意轉化為精確、優美的實體。<br />
+                    從概念到觸手可及。
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 sm:gap-6 w-full sm:w-auto">
+                    <button onclick="navigateTo('products')" class="px-10 py-4 text-lg font-medium text-white bg-black rounded-full transition-all hover:bg-gray-800 hover:scale-105 active:scale-95">
+                        探索產品
+                    </button>
+                    <button onclick="navigateTo('about')" class="px-10 py-4 text-lg font-medium text-black bg-gray-100 rounded-full transition-all hover:bg-gray-200 hover:scale-105 active:scale-95">
+                        關於我們
+                    </button>
+                </div>
+            </div>
+            <div class="pb-8 animate-bounce opacity-30 mt-12">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                </svg>
+            </div>
+        </section>
+
+        <section id="products" class="page-section px-4 sm:px-6 lg:px-8 bg-white pb-20">
+            <div class="max-w-7xl mx-auto pt-12">
+                <h1 class="text-4xl md:text-6xl font-thin text-center text-black tracking-tight mb-20">
+                    精選案例
+                </h1>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-16" id="product-grid">
+                    </div>
+            </div>
+        </section>
+
+        <section id="about" class="page-section flex items-center justify-center px-4 sm:px-6 lg:px-8 pb-20">
+            <div class="max-w-2xl mx-auto text-center pt-12">
+                <div class="mb-12 inline-block p-8 rounded-3xl bg-gray-50">
+                    <img src="./images/logo.png" alt="立線體 Logo" class="w-24 h-24 object-contain" onerror="this.style.display='none'">
+                </div>
+                
+                <h1 class="text-4xl md:text-5xl font-bold text-black tracking-tight mb-2">
+                    Cubeline｜立線體
+                </h1>
+                <h2 class="text-xl md:text-2xl font-light text-gray-500 mb-12 tracking-wide">
+                    台灣第一｜三圍量子力學研究所
+                </h2>
+                
+                <div class="space-y-8">
+                    <p class="text-2xl md:text-3xl font-light text-gray-900 leading-normal">
+                        用一條線，<br />勾勒出立體世界。
+                    </p>
+                    
+                    <div class="w-16 h-px bg-gray-200 mx-auto my-8"></div>
+
+                    <div class="space-y-4">
+                        <p class="text-lg font-medium text-gray-900 tracking-widest uppercase">
+                            3D 列印・設計・實用
+                        </p>
+                        <p class="text-base text-gray-500 font-light">
+                            客製列印籌備中，敬請期待
+                        </p>
+                    </div>
+
+                    <div class="pt-12">
+                        <p class="text-sm text-gray-400 mb-2 uppercase tracking-widest">合作請洽</p>
+                        <a href="mailto:cubeline0000@gmail.com" class="text-2xl md:text-3xl font-light text-black hover:text-gray-600 transition-colors border-b border-black/20 hover:border-black pb-1">
+                            cubeline0000@gmail.com
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="product-modal" class="hidden fixed inset-0 bg-white/60 backdrop-blur-xl z-[60] items-center justify-center p-4 sm:p-8 transition-all duration-300" onclick="closeModal()">
+        <div onclick="event.stopPropagation()" class="bg-white w-full max-w-5xl h-[80vh] rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row border border-gray-100 animate-fadeIn">
+            <div class="w-full md:w-1/2 h-1/2 md:h-full bg-gray-50 relative">
+                <img id="modal-img" src="" alt="" class="w-full h-full object-cover">
+                <button onclick="closeModal()" class="absolute top-6 left-6 md:hidden bg-white/90 backdrop-blur p-2 rounded-full shadow-sm">
+                    <svg class="w-6 h-6 text-gray-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="w-full md:w-1/2 h-1/2 md:h-full p-8 md:p-16 overflow-y-auto flex flex-col justify-center relative">
+                <button onclick="closeModal()" class="hidden md:block absolute top-8 right-8 text-gray-400 hover:text-black transition-colors">
+                    <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+
+                <h2 id="modal-title" class="text-3xl md:text-4xl font-medium text-black mb-4"></h2>
+                <p id="modal-desc" class="text-xl text-gray-500 mb-8 font-light"></p>
+                <div class="w-12 h-px bg-gray-200 mb-8"></div>
+                <p id="modal-details" class="text-lg text-gray-700 leading-loose font-light"></p>
+                <div class="mt-auto pt-12">
+                    <button class="w-full py-4 bg-black text-white rounded-xl font-medium hover:bg-gray-800 transition-colors">
+                        詢問此產品
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-white py-12 px-4 border-t border-gray-100">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-2">
+                <img src="./images/logo.png" alt="logo" class="w-6 h-6 opacity-50" onerror="this.style.display='none'">
+                <span class="text-gray-400 font-medium">Cubeline</span>
+            </div>
+            <p class="text-gray-400 text-sm font-light">
+                © <span id="year"></span> 立線體 (Cubeline). All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // 設定年份
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // 導航功能
+        function navigateTo(pageId) {
+            // 隱藏所有頁面
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // 顯示目標頁面
+            const target = document.getElementById(pageId);
+            if (target) {
+                target.classList.add('active');
+                window.scrollTo(0, 0);
+            }
+        }
+
+        // 手機選單開關
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // 產品資料
+        const products = [
+            {
+                id: 1,
+                name: '精密原型 A',
+                description: '高精度公差工程原型',
+                imgSrc: 'https://placehold.co/600x600/f5f5f7/111?text=Prototype+A', 
+                details: '使用先進 SLA 技術製作，適用於功能測試和外觀驗證。表面極度平滑，公差控制在 ±0.05mm 以內。'
+            },
+            {
+                id: 2,
+                name: '客製化治具 B',
+                description: '耐用輕量化生產工具',
+                imgSrc: 'https://placehold.co/600x600/f5f5f7/111?text=Fixture+B',
+                details: '採用 FDM 搭配工程級碳纖維複合材料製成，強度比肩鋁合金，重量卻減輕 60%。'
+            },
+            {
+                id: 3,
+                name: '藝術模型 C',
+                description: '複雜幾何微縮模型',
+                imgSrc: 'https://placehold.co/600x600/f5f5f7/111?text=Art+Model+C',
+                details: '專為設計師打造，突破傳統模具限制，完美呈現鏤空、交織等複雜幾何結構。'
+            },
+            {
+                id: 4,
+                name: '小批量生產 D',
+                description: '快速交付終端零件',
+                imgSrc: 'https://placehold.co/600x600/f5f5f7/111?text=Batch+D',
+                details: '無需開模費用，適合 10-100 件的小批量試產，縮短 80% 的產品上市時間。'
+            },
+        ];
+
+        // 生成產品列表
+        const productGrid = document.getElementById('product-grid');
+        products.forEach(product => {
+            const card = document.createElement('div');
+            card.className = 'group cursor-pointer flex flex-col gap-6';
+            card.onclick = () => openModal(product);
+            
+            card.innerHTML = `
+                <div class="aspect-square w-full bg-gray-50 rounded-3xl overflow-hidden relative border border-gray-100">
+                    <img src="${product.imgSrc}" alt="${product.name}" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" onerror="this.src='https://placehold.co/600x600/f5f5f7/ccc?text=Image+Not+Found'">
+                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-500"></div>
+                </div>
+                <div class="space-y-2">
+                    <h3 class="text-2xl font-medium text-gray-900">${product.name}</h3>
+                    <p class="text-lg text-gray-500 font-light">${product.description}</p>
+                </div>
+            `;
+            productGrid.appendChild(card);
+        });
+
+        // 彈窗功能
+        const modal = document.getElementById('product-modal');
+        
+        function openModal(product) {
+            document.getElementById('modal-img').src = product.imgSrc;
+            document.getElementById('modal-title').textContent = product.name;
+            document.getElementById('modal-desc').textContent = product.description;
+            document.getElementById('modal-details').textContent = product.details;
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden'; // 禁止背景捲動
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = 'auto'; // 恢復背景捲動
+        }
+    </script>
+</body>
 </html>
