@@ -78,6 +78,25 @@
         .nav-link:hover span {
             transform: scaleX(1);
         }
+
+        /* 分頁按鈕樣式 */
+        .pagination-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        .pagination-btn.active {
+            background-color: #000;
+            color: #fff;
+        }
+        .pagination-btn:not(.active):hover {
+            background-color: #f3f4f6;
+        }
     </style>
 </head>
 <body class="bg-white text-[#111]">
@@ -144,42 +163,50 @@
                     </h1>
 
                     <!-- Subtitle -->
-                    <p class="text-xl md:text-2xl font-light text-gray-500 max-w-2xl mx-auto mb-12 leading-relaxed">
+                    <p class="text-xl md:text-2xl font-light text-gray-500 max-w-2xl mx-auto mb-16 leading-relaxed">
                         立線體將創意轉化為精確、優美的實體。<br>
                         從概念到觸手可及。
                     </p>
 
-                    <!-- 本月主打產品區塊 (取代舊按鈕) -->
-                    <div class="w-full max-w-sm md:max-w-md mx-auto relative group cursor-pointer" onclick="handleNavigate('products')">
+                    <!-- 本月主打產品區塊 -->
+                    <div class="w-full max-w-sm md:max-w-md mx-auto relative group cursor-pointer mb-12" onclick="handleNavigate('products')">
                         <!-- 標題 -->
-                        <div class="mb-6 flex items-center justify-center gap-4">
-                            <div class="h-px w-8 bg-gray-300"></div>
-                            <span class="text-sm font-medium tracking-[0.2em] uppercase text-gray-900">本月主打產品</span>
-                            <div class="h-px w-8 bg-gray-300"></div>
+                        <div class="mb-8 flex items-center justify-center gap-4">
+                            <div class="h-px w-12 bg-gray-200"></div>
+                            <span class="text-sm font-medium tracking-[0.3em] uppercase text-gray-400">本月主打 Featured</span>
+                            <div class="h-px w-12 bg-gray-200"></div>
                         </div>
 
-                        <!-- 圖片容器 (帶有淡入與上浮效果) -->
-                        <div class="relative w-full aspect-[4/3] overflow-hidden rounded-2xl shadow-2xl border border-gray-100 opacity-0 animate-fade-in-up" style="animation-delay: 0.3s;">
-                            <!-- 預留的圖片位置：請確保 images 資料夾有名為 featured.jpg 的圖片 -->
+                        <!-- 圖片容器 -->
+                        <div class="relative w-full aspect-[4/3] overflow-hidden rounded-2xl shadow-2xl border border-gray-100 opacity-0 animate-fade-in-up bg-gray-50" style="animation-delay: 0.3s;">
                             <img src="./images/featured.jpg" 
-                                 alt="本月主打" 
+                                 alt="本月主打：Voronoi 參數化單椅" 
                                  class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                                 onerror="this.src='https://placehold.co/800x600/f5f5f7/111?text=Feature+Image'">
+                                 onerror="this.src='https://placehold.co/800x600/f5f5f7/111?text=Featured+Product'">
                             
                             <!-- 懸停遮罩 -->
-                            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500 flex items-center justify-center">
-                                <span class="bg-white/90 backdrop-blur px-6 py-2 rounded-full text-sm font-medium tracking-widest opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
-                                    查看詳情
-                                </span>
+                            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-500"></div>
+                        </div>
+
+                        <!-- 新增：產品介紹區塊 -->
+                        <div class="mt-8 text-left opacity-0 animate-fade-in" style="animation-delay: 0.6s;">
+                            <div class="flex items-baseline justify-between mb-2">
+                                <h3 class="text-2xl font-medium text-gray-900">Voronoi 參數化單椅</h3>
+                                <span class="text-sm text-gray-400 font-mono">NO.2025-05</span>
+                            </div>
+                            <p class="text-gray-500 leading-relaxed font-light text-justify">
+                                突破傳統製造限制，運用演算法生成的仿生細胞結構。不僅大幅減輕重量，更提供絕佳的人體工學支撐與視覺通透感。展現 3D 列印在大尺度家具設計的無限可能。
+                            </p>
+                            <div class="mt-4 flex items-center text-sm font-medium text-black gap-2 group-hover:gap-3 transition-all">
+                                閱讀更多細節
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                             </div>
                         </div>
-                        
-                        <p class="mt-4 text-gray-400 text-xs tracking-widest animate-fade-in opacity-0" style="animation-delay: 0.8s;">點擊探索更多細節</p>
                     </div>
                 </div>
                 
                 <!-- Scroll Indicator -->
-                <div class="pb-4 animate-bounce opacity-30 mt-12">
+                <div class="pb-4 animate-bounce opacity-30 mt-8">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
                     </svg>
@@ -189,12 +216,18 @@
 
         <!-- 產品頁面 -->
         <section id="page-products" class="hidden-page">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 min-h-screen flex flex-col">
                 <h1 class="text-4xl md:text-6xl font-thin text-center text-black tracking-tight mb-4 mt-10">產品目錄</h1>
-                <p class="text-center text-gray-500 font-light mb-16 tracking-wide">精選 20 款創新設計與實用方案</p>
+                <p class="text-center text-gray-500 font-light mb-16 tracking-wide">精選 30 款創新設計與實用方案</p>
                 
-                <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12">
+                <!-- 產品網格 -->
+                <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12 flex-grow">
                     <!-- 產品卡片由 JS 生成 -->
+                </div>
+
+                <!-- 分頁控制 -->
+                <div id="pagination-controls" class="flex justify-center gap-3 mt-16 mb-8">
+                    <!-- 分頁按鈕由 JS 生成 -->
                 </div>
             </div>
         </section>
@@ -276,153 +309,52 @@
     </footer>
 
     <script>
-        // 1. 產品資料庫 - 擴充至 20 項
+        // 1. 產品資料庫 - 擴充至 30 項
         const products = [
-            {
-                id: 1,
-                name: 'NFC 智能名片',
-                description: '輕輕一碰，交換最深的人情',
-                imgSrc: './images/product-1.jpg', 
-                details: '使用先進 PLA 材質製作，內嵌高頻 NFC 晶片。經過實際測試，表面平滑不傷錢包或刮手，厚度僅約 1.2 毫米，相容於 iOS 與 Android 系統。'
-            },
-            {
-                id: 2,
-                name: '碳纖維工程治具',
-                description: '耐用輕量化生產工具',
-                imgSrc: './images/product-2.jpg',
-                details: '採用 FDM 搭配工程級 PA12-CF（尼龍碳纖維）複合材料製成，強度比肩鋁合金，重量卻減輕 60%，適合生產線長期使用的輔助工具。'
-            },
-            {
-                id: 3,
-                name: 'Voronoi 藝術燈罩',
-                description: '光影交織的數學之美',
-                imgSrc: './images/product-3.jpg',
-                details: '運用 Voronoi 演算法生成的自然孔洞結構，突破傳統模具限制。使用半透明 PETG 材料，光線穿透時產生獨特的光影紋理。'
-            },
-            {
-                id: 4,
-                name: '小批量試產零件',
-                description: '快速交付終端零件',
-                imgSrc: './images/product-4.jpg',
-                details: '無需開模費用，適合 10-100 件的小批量試產。使用工業級 ABS 材料，可進行後續打磨與噴漆處理，縮短 80% 的產品上市時間。'
-            },
-            {
-                id: 5,
-                name: '幾何極簡手機架',
-                description: '桌面上的現代雕塑',
-                imgSrc: './images/product-5.jpg',
-                details: '以低多邊形 (Low Poly) 風格設計，穩固支撐各式手機。底部附有防滑墊設計，兼具實用與裝飾性。'
-            },
-            {
-                id: 6,
-                name: '模組化理線器',
-                description: '告別混亂的桌面救星',
-                imgSrc: './images/product-6.jpg',
-                details: '磁吸式設計，可自由拼接擴充。專為 Type-C、Lightning 等常用線材設計卡槽，保持桌面整潔有序。'
-            },
-            {
-                id: 7,
-                name: '3D 浮雕相片 (Lithophane)',
-                description: '光線背後的永恆回憶',
-                imgSrc: './images/product-7.jpg',
-                details: '將平面照片轉化為不同厚度的浮雕層，未開燈時為白色浮雕，背光照射下即呈現高解析度的黑白照片效果。'
-            },
-            {
-                id: 8,
-                name: '螺旋紋花器',
-                description: '花瓶模式的極致展現',
-                imgSrc: './images/product-8.jpg',
-                details: '使用花瓶模式 (Vase Mode) 連續列印，無接縫一體成型。獨特的螺旋紋路增加了結構強度與視覺流動感，防水測試通過。'
-            },
-            {
-                id: 9,
-                name: '無人機輕量化支架',
-                description: '為飛行減重',
-                imgSrc: './images/product-9.jpg',
-                details: '針對 FPV 穿越機設計的保護套與鏡頭支架，使用 TPU 軟性材料，具備極佳的吸震與耐撞擊能力。'
-            },
-            {
-                id: 10,
-                name: '建築微縮模型',
-                description: '還原設計師的空間構想',
-                imgSrc: './images/product-10.jpg',
-                details: '高精度 SLA 光固化列印，層高僅 0.05mm，完美呈現建築外牆紋理與內部樓層結構，適合競圖與展示使用。'
-            },
-            {
-                id: 11,
-                name: '人體工學滑鼠托',
-                description: '手腕的舒適依靠',
-                imgSrc: './images/product-11.jpg',
-                details: '根據手腕曲線掃描建模，使用親膚材質列印，表面經過霧化處理，長時間使用不黏膩。'
-            },
-            {
-                id: 12,
-                name: '機械鍵盤個性鍵帽',
-                description: '指尖上的微型藝術',
-                imgSrc: './images/product-12.jpg',
-                details: '相容於 Cherry MX 軸體，採用樹脂光固化技術製作，細節清晰，透光度佳，可客製化圖案。'
-            },
-            {
-                id: 13,
-                name: 'GoPro 多功能夾具',
-                description: '捕捉極限視角',
-                imgSrc: './images/product-13.jpg',
-                details: '高填充率 PETG 材質，耐候性強，適合戶外使用。可夾持於直徑 20-40mm 的管狀物體上。'
-            },
-            {
-                id: 14,
-                name: '客製化桌遊收納盒',
-                description: '收納強迫症的福音',
-                imgSrc: './images/product-14.jpg',
-                details: '針對特定桌遊量身打造的分隔收納系統，所有卡牌、指示物皆有專屬位置，加速遊戲設置時間。'
-            },
-            {
-                id: 15,
-                name: '雙色漸層擺飾',
-                description: '色彩融合的視覺魔法',
-                imgSrc: './images/product-15.jpg',
-                details: '使用雙色絲綢 PLA 線材，隨著觀看角度不同，呈現如極光般的色彩變化，表面具有絲綢光澤。'
-            },
-            {
-                id: 16,
-                name: '工業原型外殼',
-                description: '產品開發的驗證利器',
-                imgSrc: './images/product-16.jpg',
-                details: '快速驗證 PCB 板組裝干涉問題。提供螺紋預埋件 (Heat Set Insert) 安裝服務，模擬最終產品組裝手感。'
-            },
-            {
-                id: 17,
-                name: '自行車專用配件',
-                description: '騎行愛好者的專屬改裝',
-                imgSrc: './images/product-17.jpg',
-                details: '碼表延伸座、水壺架轉接座等。使用 ASA 材質，抗紫外線照射，長期戶外曝曬不脆化。'
-            },
-            {
-                id: 18,
-                name: '耳機掛架',
-                description: '簡約懸掛美學',
-                imgSrc: './images/product-18.jpg',
-                details: '可夾式或黏貼式設計，寬大的弧形支撐面，保護耳機頭帶海綿不變形。'
-            },
-            {
-                id: 19,
-                name: 'TPU 彈性密封件',
-                description: '客製化軟膠解決方案',
-                imgSrc: './images/product-19.jpg',
-                details: '使用 95A 硬度 TPU，製作絕版機器的密封墊圈或防撞條，具有良好的回彈性與耐磨性。'
-            },
-            {
-                id: 20,
-                name: '教育用分子模型',
-                description: '立體化學教材',
-                imgSrc: './images/product-20.jpg',
-                details: '將抽象的化學分子結構實體化，採用多色分件列印組裝，適合教學演示與學生觸摸學習。'
-            }
+            // 原有 1-20 項
+            { id: 1, name: 'NFC 智能名片', description: '輕輕一碰，交換最深的人情', imgSrc: './images/product-1.jpg', details: '使用先進 PLA 材質製作，內嵌高頻 NFC 晶片。經過實際測試，表面平滑不傷錢包或刮手，厚度僅約 1.2 毫米，相容於 iOS 與 Android 系統。' },
+            { id: 2, name: '碳纖維工程治具', description: '耐用輕量化生產工具', imgSrc: './images/product-2.jpg', details: '採用 FDM 搭配工程級 PA12-CF（尼龍碳纖維）複合材料製成，強度比肩鋁合金，重量卻減輕 60%，適合生產線長期使用的輔助工具。' },
+            { id: 3, name: 'Voronoi 藝術燈罩', description: '光影交織的數學之美', imgSrc: './images/product-3.jpg', details: '運用 Voronoi 演算法生成的自然孔洞結構，突破傳統模具限制。使用半透明 PETG 材料，光線穿透時產生獨特的光影紋理。' },
+            { id: 4, name: '小批量試產零件', description: '快速交付終端零件', imgSrc: './images/product-4.jpg', details: '無需開模費用，適合 10-100 件的小批量試產。使用工業級 ABS 材料，可進行後續打磨與噴漆處理，縮短 80% 的產品上市時間。' },
+            { id: 5, name: '幾何極簡手機架', description: '桌面上的現代雕塑', imgSrc: './images/product-5.jpg', details: '以低多邊形 (Low Poly) 風格設計，穩固支撐各式手機。底部附有防滑墊設計，兼具實用與裝飾性。' },
+            { id: 6, name: '模組化理線器', description: '告別混亂的桌面救星', imgSrc: './images/product-6.jpg', details: '磁吸式設計，可自由拼接擴充。專為 Type-C、Lightning 等常用線材設計卡槽，保持桌面整潔有序。' },
+            { id: 7, name: '3D 浮雕相片 (Lithophane)', description: '光線背後的永恆回憶', imgSrc: './images/product-7.jpg', details: '將平面照片轉化為不同厚度的浮雕層，未開燈時為白色浮雕，背光照射下即呈現高解析度的黑白照片效果。' },
+            { id: 8, name: '螺旋紋花器', description: '花瓶模式的極致展現', imgSrc: './images/product-8.jpg', details: '使用花瓶模式 (Vase Mode) 連續列印，無接縫一體成型。獨特的螺旋紋路增加了結構強度與視覺流動感，防水測試通過。' },
+            { id: 9, name: '無人機輕量化支架', description: '為飛行減重', imgSrc: './images/product-9.jpg', details: '針對 FPV 穿越機設計的保護套與鏡頭支架，使用 TPU 軟性材料，具備極佳的吸震與耐撞擊能力。' },
+            { id: 10, name: '建築微縮模型', description: '還原設計師的空間構想', imgSrc: './images/product-10.jpg', details: '高精度 SLA 光固化列印，層高僅 0.05mm，完美呈現建築外牆紋理與內部樓層結構，適合競圖與展示使用。' },
+            { id: 11, name: '人體工學滑鼠托', description: '手腕的舒適依靠', imgSrc: './images/product-11.jpg', details: '根據手腕曲線掃描建模，使用親膚材質列印，表面經過霧化處理，長時間使用不黏膩。' },
+            { id: 12, name: '機械鍵盤個性鍵帽', description: '指尖上的微型藝術', imgSrc: './images/product-12.jpg', details: '相容於 Cherry MX 軸體，採用樹脂光固化技術製作，細節清晰，透光度佳，可客製化圖案。' },
+            { id: 13, name: 'GoPro 多功能夾具', description: '捕捉極限視角', imgSrc: './images/product-13.jpg', details: '高填充率 PETG 材質，耐候性強，適合戶外使用。可夾持於直徑 20-40mm 的管狀物體上。' },
+            { id: 14, name: '客製化桌遊收納盒', description: '收納強迫症的福音', imgSrc: './images/product-14.jpg', details: '針對特定桌遊量身打造的分隔收納系統，所有卡牌、指示物皆有專屬位置，加速遊戲設置時間。' },
+            { id: 15, name: '雙色漸層擺飾', description: '色彩融合的視覺魔法', imgSrc: './images/product-15.jpg', details: '使用雙色絲綢 PLA 線材，隨著觀看角度不同，呈現如極光般的色彩變化，表面具有絲綢光澤。' },
+            { id: 16, name: '工業原型外殼', description: '產品開發的驗證利器', imgSrc: './images/product-16.jpg', details: '快速驗證 PCB 板組裝干涉問題。提供螺紋預埋件 (Heat Set Insert) 安裝服務，模擬最終產品組裝手感。' },
+            { id: 17, name: '自行車專用配件', description: '騎行愛好者的專屬改裝', imgSrc: './images/product-17.jpg', details: '碼表延伸座、水壺架轉接座等。使用 ASA 材質，抗紫外線照射，長期戶外曝曬不脆化。' },
+            { id: 18, name: '耳機掛架', description: '簡約懸掛美學', imgSrc: './images/product-18.jpg', details: '可夾式或黏貼式設計，寬大的弧形支撐面，保護耳機頭帶海綿不變形。' },
+            { id: 19, name: 'TPU 彈性密封件', description: '客製化軟膠解決方案', imgSrc: './images/product-19.jpg', details: '使用 95A 硬度 TPU，製作絕版機器的密封墊圈或防撞條，具有良好的回彈性與耐磨性。' },
+            { id: 20, name: '教育用分子模型', description: '立體化學教材', imgSrc: './images/product-20.jpg', details: '將抽象的化學分子結構實體化，採用多色分件列印組裝，適合教學演示與學生觸摸學習。' },
+            
+            // 新增 21-30 項
+            { id: 21, name: '蜂巢模組置物架', description: '可無限延伸的牆面裝飾', imgSrc: './images/product-21.jpg', details: '以六角形蜂巢結構為基礎，附帶隱形掛扣，可依據牆面大小自由拼裝，兼具展示與收納功能。' },
+            { id: 22, name: '造型鑰匙收納盤', description: '玄關的守護者', imgSrc: './images/product-22.jpg', details: '結合地形圖等高線設計風格，提供鑰匙、零錢的專屬歸屬，讓出門不再慌亂。' },
+            { id: 23, name: '遊戲手把支架', description: '玩家的展示台', imgSrc: './images/product-23.jpg', details: '專為 PS5/Xbox 手把設計，重心穩固不傾倒，底部預留充電線孔位，展示與充電同時進行。' },
+            { id: 24, name: '幾何多面體盆栽', description: '綠意與幾何的對話', imgSrc: './images/product-24.jpg', details: '使用可生物分解的 PLA 材質，內部設計有疏水層，幾何切面在陽光下產生豐富光影變化。' },
+            { id: 25, name: '筆電隱形散熱架', description: '輕巧便攜的視角優化', imgSrc: './images/product-25.jpg', details: '磁吸式收納設計，貼附於筆電底部。展開即可抬升 15 度角，增加底部散熱空間並改善打字手勢。' },
+            { id: 26, name: '參數化筆筒', description: '波浪般的桌面風景', imgSrc: './images/product-26.jpg', details: '透過參數化設計生成的不規則波浪紋理，每個角度看都有不同姿態，同時能穩固收納各式文具。' },
+            { id: 27, name: '抽屜分隔系統', description: '量身訂製的收納', imgSrc: './images/product-27.jpg', details: '模組化方塊設計，可依據抽屜尺寸自由組合成不同大小的格子，適合收納文具、化妝品或飾品。' },
+            { id: 28, name: '筆電鏡頭隱私蓋', description: '極致輕薄的安全感', imgSrc: './images/product-28.jpg', details: '厚度僅 0.7mm，不影響筆電闔上。滑動式開關設計，物理性阻擋鏡頭，徹底杜絕駭客窺視。' },
+            { id: 29, name: 'SD 卡與隨身碟收納', description: '數據的家', imgSrc: './images/product-29.jpg', details: '如同瑞士刀般的旋轉開合設計，可同時收納多張 SD、MicroSD 卡與 USB 隨身碟，體積小巧便於攜帶。' },
+            { id: 30, name: '活動關節龍模型', description: '列印一體成型的奇蹟', imgSrc: './images/product-30.jpg', details: '利用 3D 列印特性 (Print-in-place)，一次列印完成無需組裝。全身 40 處關節可動，把玩手感極佳。' }
         ];
 
         // 2. 初始化
         document.getElementById('year').textContent = new Date().getFullYear();
+        
+        // 分頁狀態
+        let currentProductPage = 1;
+        const itemsPerPage = 10;
+
         renderProducts();
+        renderPagination();
 
         let isTransitioning = false;
         let currentPage = 'home';
@@ -469,15 +401,21 @@
             }, 400);
         }
 
-        // 4. 生成產品卡片
+        // 4. 生成產品卡片 (含分頁邏輯)
         function renderProducts() {
             const grid = document.getElementById('product-grid');
-            products.forEach(product => {
+            grid.innerHTML = ''; // 清空現有內容
+
+            // 計算當前頁面的開始與結束索引
+            const start = (currentProductPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageProducts = products.slice(start, end);
+
+            pageProducts.forEach(product => {
                 const card = document.createElement('div');
                 card.className = 'group cursor-pointer flex flex-col gap-4 p-4 rounded-2xl hover:bg-gray-50 transition-colors duration-300';
                 card.onclick = () => openModal(product);
                 
-                // 格式化 ID 為 3 位數 (例如 001)
                 const formattedId = String(product.id).padStart(3, '0');
 
                 card.innerHTML = `
@@ -495,6 +433,27 @@
             });
         }
 
+        // 新增：生成分頁按鈕
+        function renderPagination() {
+            const container = document.getElementById('pagination-controls');
+            container.innerHTML = '';
+            
+            const totalPages = Math.ceil(products.length / itemsPerPage);
+
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement('button');
+                btn.textContent = i;
+                btn.className = `pagination-btn ${i === currentProductPage ? 'active' : ''}`;
+                btn.onclick = () => {
+                    currentProductPage = i;
+                    renderProducts();
+                    renderPagination(); // 更新按鈕狀態
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                };
+                container.appendChild(btn);
+            }
+        }
+
         // 5. Modal 邏輯
         const modal = document.getElementById('product-modal');
         const modalContent = document.getElementById('modal-content');
@@ -502,11 +461,9 @@
         function openModal(product) {
             const modalImg = document.getElementById('modal-img');
             
-            // 重置圖片來源以避免顯示上一張圖片的殘影
             modalImg.src = ''; 
             modalImg.src = product.imgSrc;
             
-            // 錯誤處理
             modalImg.onerror = function() {
                 this.src = 'https://placehold.co/800x600/f5f5f7/ccc?text=Product+Image+Missing';
             };
@@ -517,7 +474,6 @@
             document.getElementById('modal-details').textContent = product.details;
 
             modal.classList.remove('hidden');
-            // 強制重繪
             void modal.offsetWidth; 
             
             modal.classList.remove('opacity-0');
